@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clinical interface design system</title>
+    <link rel="stylesheet" href="src/styles/system.css" />
+    <style>
+      @page {
+        size: letter;
+        margin: 14mm 16mm 16mm;
+      }
+
+      .sheet {
+        max-width: 720px;
+        margin: 0 auto;
+        color: #0f172a;
+      }
+
+      .cover {
+        min-height: 244mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        break-after: page;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: #2563eb;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .cover h1 {
+        margin: 0;
+        max-width: 520px;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 52px;
+        letter-spacing: -0.035em;
+      }
+
+      .lede {
+        max-width: 460px;
+        margin: 20px 0 0;
+        color: #334155;
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      .cover-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .cover-meta strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .cover-meta span {
+        color: #64748b;
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      h2.section {
+        margin: 0 0 6px;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 26px;
+        letter-spacing: -0.025em;
+        color: #0f172a;
+        break-after: avoid;
+      }
+
+      .section-intro {
+        margin: 0 0 18px;
+        max-width: 560px;
+        color: #334155;
+        font-size: 13px;
+        line-height: 18px;
+        break-after: avoid;
+      }
+
+      h3.group {
+        margin: 18px 0 8px;
+        color: #1e293b;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+        break-after: avoid;
+      }
+
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .swatch {
+        break-inside: avoid;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+      }
+
+      .swatch-chip {
+        height: 48px;
+      }
+
+      .swatch p {
+        margin: 0;
+        padding: 8px 10px 10px;
+      }
+
+      .swatch strong {
+        display: block;
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+      .swatch code,
+      .token {
+        color: #64748b;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+
+      .note {
+        margin: 14px 0 0;
+        padding: 12px 14px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        color: #334155;
+        font-size: 12px;
+        line-height: 17px;
+        break-inside: avoid;
+      }
+
+      .type-sample {
+        display: grid;
+        grid-template-columns: 148px 1fr;
+        gap: 8px 16px;
+        align-items: baseline;
+        padding: 10px 0;
+        border-top: 1px solid #f1f5f9;
+        break-inside: avoid;
+      }
+
+      .type-sample small {
+        color: #64748b;
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+      .scales {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 22px;
+        align-items: flex-end;
+      }
+
+      .scale {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        color: #64748b;
+        font-size: 11px;
+        break-inside: avoid;
+      }
+
+      .bar {
+        background: #2563eb;
+        border-radius: 4px;
+      }
+
+      .radii {
+        display: flex;
+        gap: 16px;
+        align-items: flex-end;
+      }
+
+      .radius-box {
+        display: flex;
+        align-items: flex-end;
+        width: 72px;
+        height: 56px;
+        padding: 8px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        box-shadow: var(--shadow-card);
+        color: #64748b;
+        font-size: 11px;
+      }
+
+      .row-gap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .specimen {
+        margin: 0 0 14px;
+        padding: 14px;
+        background: #fff;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+        break-inside: avoid;
+      }
+
+      .specimen header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .specimen header p {
+        margin: 2px 0 0;
+        color: #64748b;
+        font-size: 11px;
+        line-height: 15px;
+      }
+
+      .specimen header strong {
+        font-size: 13px;
+      }
+
+      .icons {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+      }
+
+      .icon-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 4px;
+        color: #334155;
+        font-size: 10px;
+      }
+
+      .icon-cell .icon { width: 18px; height: 18px; }
+
+      .cols-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .field-demo { max-width: 280px; }
+
+      .layout-diagram {
+        display: grid;
+        grid-template-columns: 160px minmax(0, 1fr) 180px;
+        gap: 8px;
+        min-height: 120px;
+      }
+
+      .layout-diagram div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 11px;
+        line-height: 15px;
+      }
+
+      .layout-diagram strong { font-size: 12px; }
+      .layout-diagram span { color: #64748b; }
+
+      table.rules {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      table.rules th,
+      table.rules td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      table.rules th {
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      code.inline {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <section class="cover">
+        <div>
+          <p class="eyebrow">Design system</p>
+          <h1>Clinical interface</h1>
+          <p class="lede">
+            Tokens, components, and the chart layout for a fictional patient record. Designers use the roles below. Developers compose the same pieces in Storybook.
+          </p>
+        </div>
+        <div class="cover-meta">
+          <div>
+            <strong>Record</strong>
+            <span>Jordan Hale, 65. Not a real patient, clinician, or product.</span>
+          </div>
+          <div>
+            <strong>Structure</strong>
+            <span>Foundations, atoms, molecules, organisms, one template, two pages.</span>
+          </div>
+          <div>
+            <strong>Type</strong>
+            <span>Inter. Color pairs meet WCAG AA for text.</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <p class="eyebrow">01</p>
+        <h2 class="section">How it is built</h2>
+        <p class="section-intro">Each level only knows the level under it. The template owns the grid. The page decides which view fills the middle column.</p>
+        <table class="rules">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Job</th>
+              <th>Pieces</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Foundations</td>
+              <td>Color, type, space, radius, shadow</td>
+              <td>CSS variables on <code class="inline">:root</code></td>
+            </tr>
+            <tr>
+              <td>Atoms</td>
+              <td>One control, no layout opinions</td>
+              <td>Icon, icon button, count, tab, button, chip, status, text controls</td>
+            </tr>
+            <tr>
+              <td>Molecules</td>
+              <td>Atoms with one job</td>
+              <td>Field, choice, lab metric, timeline item</td>
+            </tr>
+            <tr>
+              <td>Organisms</td>
+              <td>A section of the chart</td>
+              <td>Patient record, diagnosis timeline, assessment form, clinical results</td>
+            </tr>
+            <tr>
+              <td>Template</td>
+              <td>Three slots and the small-screen switch</td>
+              <td>Chart</td>
+            </tr>
+            <tr>
+              <td>Pages</td>
+              <td>One record, one view</td>
+              <td>Dashboard, assessment</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">One primary button in a region. It is the next step, such as Start assessment or Publish. Secondary saves a draft. Ghost leaves the flow. A chip names a fact. A status names where an assessment is. Do not use one as the other.</p>
+      </section>
+
+      <section>
+        <p class="eyebrow">02</p>
+        <h2 class="section">Color</h2>
+        <p class="section-intro">Meaning is fixed. A falling LDL-C is good. A falling eGFR is attention. A steady potassium stays neutral. Do not recolor a value because the arrow points up.</p>
+
+        <h3 class="group">Surfaces</h3>
+        <div class="swatches">
+          <article class="swatch"><div class="swatch-chip" style="background:#f8fafc;border-bottom:1px solid #e2e8f0"></div><p><strong>Canvas</strong><code>--color-bg-canvas</code><br /><code>#f8fafc</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#ffffff;border-bottom:1px solid #e2e8f0"></div><p><strong>Surface</strong><code>--color-bg-surface</code><br /><code>#ffffff</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#e2e8f0"></div><p><strong>Subtle</strong><code>--color-bg-subtle</code><br /><code>#e2e8f0</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#f1f5f9"></div><p><strong>Border</strong><code>--color-border-default</code><br /><code>#f1f5f9</code></p></article>
+        </div>
+
+        <h3 class="group">Text</h3>
+        <div class="swatches">
+          <article class="swatch"><div class="swatch-chip" style="background:#0f172a"></div><p><strong>Primary</strong><code>--color-text-primary</code><br /><code>#0f172a</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#1e293b"></div><p><strong>Heading</strong><code>Clinical titles</code><br /><code>#1e293b</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#334155"></div><p><strong>Strong</strong><code>--color-text-strong</code><br /><code>#334155</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#64748b"></div><p><strong>Secondary</strong><code>--color-text-secondary</code><br /><code>#64748b</code></p></article>
+        </div>
+
+        <h3 class="group">Brand and clinical meaning</h3>
+        <div class="swatches">
+          <article class="swatch"><div class="swatch-chip" style="background:#2563eb"></div><p><strong>Brand</strong><code>--color-bg-brand</code><br /><code>#2563eb</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#eff6ff"></div><p><strong>Brand subtle</strong><code>--color-bg-brand-subtle</code><br /><code>#eff6ff</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#15803d"></div><p><strong>Success</strong><code>--color-text-success</code><br /><code>#15803d</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#dcfce7"></div><p><strong>Success subtle</strong><code>--color-bg-success-subtle</code><br /><code>#dcfce7</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#a16207"></div><p><strong>Warning</strong><code>--color-text-warning</code><br /><code>#a16207</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#fef9c3"></div><p><strong>Warning subtle</strong><code>--color-bg-warning-subtle</code><br /><code>#fef9c3</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#b91c1c"></div><p><strong>Danger</strong><code>--color-text-danger</code><br /><code>#b91c1c</code></p></article>
+          <article class="swatch"><div class="swatch-chip" style="background:#ffe4e6"></div><p><strong>Danger subtle</strong><code>--color-bg-danger-subtle</code><br /><code>#ffe4e6</code></p></article>
+        </div>
+        <p class="note">Text on its background meets 4.5:1. White on brand blue passes. White on the published green passes. Amber on the yellow tile passes. A lighter green, yellow, or gray from the source look is used only when that pair passes. Otherwise the next darker step is the token.</p>
+      </section>
+
+      <section>
+        <p class="eyebrow">03</p>
+        <h2 class="section">Type</h2>
+        <p class="section-intro">Inter. Use the role. Section titles stay smaller than the patient name and the numbers.</p>
+        <div class="type-sample"><small>Patient name<br />20 / 28 · 700</small><span style="font-size:20px;font-weight:700;line-height:28px;letter-spacing:-0.025em">Jordan Hale</span></div>
+        <div class="type-sample"><small>Title<br />22 / 26 · 700</small><span class="type-title">Assessment</span></div>
+        <div class="type-sample"><small>Section<br />14 / 20 · 500</small><span style="font-size:14px;font-weight:500;line-height:20px;color:#1e293b">Latest diagnoses</span></div>
+        <div class="type-sample"><small>Body<br />14 / 20 · 400</small><span style="font-size:14px;line-height:20px">Symptoms progressed over six weeks. No chest pain at rest.</span></div>
+        <div class="type-sample"><small>Lab value<br />14 / 18 · 700</small><span style="font-size:14px;font-weight:700;line-height:18px;font-variant-numeric:tabular-nums">2.1 <span style="color:#64748b;font-size:9px;font-weight:500">mmol/L</span></span></div>
+        <div class="type-sample"><small>Lab label<br />9 · 500 · upper</small><span class="lab-label" style="position:static">LDL-C</span></div>
+        <div class="type-sample"><small>Caption<br />12 / 16 · 400</small><span class="meta">Friday, June 4, 2021</span></div>
+
+        <h3 class="group">Space</h3>
+        <div class="scales">
+          <div class="scale"><div class="bar" style="width:4px;height:16px"></div>4</div>
+          <div class="scale"><div class="bar" style="width:8px;height:16px"></div>8</div>
+          <div class="scale"><div class="bar" style="width:12px;height:16px"></div>12</div>
+          <div class="scale"><div class="bar" style="width:16px;height:16px"></div>16</div>
+          <div class="scale"><div class="bar" style="width:24px;height:16px"></div>24</div>
+          <div class="scale"><div class="bar" style="width:32px;height:16px"></div>32</div>
+        </div>
+
+        <h3 class="group">Radius and elevation</h3>
+        <div class="radii">
+          <div class="radius-box" style="border-radius:8px">8</div>
+          <div class="radius-box" style="border-radius:12px">12</div>
+          <div class="radius-box" style="border-radius:16px">16</div>
+          <div class="radius-box" style="border-radius:999px;width:88px">pill</div>
+          <div class="radius-box" style="border-radius:12px;box-shadow:0 2px 12px -4px rgba(0,0,0,0.08)">raised</div>
+        </div>
+        <p class="note">Cards use a 12px radius and a hairline border. The patient column uses 16px. Buttons, chips, and status are pills, except the secondary button, which uses an 8px radius.</p>
+      </section>
+
+      <section>
+        <p class="eyebrow">04</p>
+        <h2 class="section">Atoms</h2>
+        <p class="section-intro">Import the atom. Do not restyle it in the parent.</p>
+
+        <article class="specimen">
+          <header>
+            <div><strong>Button</strong><p>Primary is the next step. Secondary saves. Ghost leaves. An optional icon sits before the label.</p></div>
+            <code class="token">Button</code>
+          </header>
+          <div class="row-gap">
+            <button class="btn btn-primary" type="button">Start assessment</button>
+            <button class="btn btn-secondary" type="button">Save draft</button>
+            <button class="btn btn-ghost" type="button">Back</button>
+            <button class="btn btn-primary" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg>Publish</button>
+          </div>
+        </article>
+
+        <article class="specimen">
+          <header>
+            <div><strong>Chip</strong><p>A fact: diagnosis, risk, or medication. The first item in a group is brand. The rest are neutral.</p></div>
+            <code class="token">Chip</code>
+          </header>
+          <div class="row-gap">
+            <span class="chip chip-brand">CAD</span>
+            <span class="chip chip-neutral">HFpEF</span>
+            <span class="chip chip-success">Improved</span>
+            <span class="chip chip-warning">Watch</span>
+            <span class="chip chip-danger">Allergy</span>
+          </div>
+        </article>
+
+        <article class="specimen">
+          <header>
+            <div><strong>Status</strong><p>Writes its own label. The icon repeats the words and is hidden from assistive technology.</p></div>
+            <code class="token">Status</code>
+          </header>
+          <div class="row-gap">
+            <span class="status status-progress">In progress<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v4l3 3" /><path d="M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg></span>
+            <span class="status status-published">Published<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg></span>
+          </div>
+        </article>
+
+        <div class="cols-2">
+          <article class="specimen">
+            <header>
+              <div><strong>Tab</strong><p>Pill for exam sections. Text for medication lists, with a count.</p></div>
+              <code class="token">Tab</code>
+            </header>
+            <div class="row-gap" style="margin-bottom:10px">
+              <button class="tab tab-pill" type="button" aria-pressed="true">Cardiac</button>
+              <button class="tab tab-pill" type="button" aria-pressed="false">Volume status</button>
+            </div>
+            <div class="row-gap">
+              <button class="tab tab-text" type="button" aria-pressed="true">Cardiac meds<span class="count">4</span></button>
+              <button class="tab tab-text" type="button" aria-pressed="false">Other meds<span class="count">2</span></button>
+            </div>
+          </article>
+          <article class="specimen">
+            <header>
+              <div><strong>Icon button</strong><p>The label is required and becomes the accessible name.</p></div>
+              <code class="token">IconButton</code>
+            </header>
+            <button class="icon-btn" type="button" aria-label="Add diagnosis"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14" /><path d="M5 12h14" /></svg></button>
+          </article>
+        </div>
+
+        <article class="specimen">
+          <header>
+            <div><strong>Icons</strong><p>24 viewBox, 2px stroke, hidden from assistive technology. Name the control, not the picture.</p></div>
+            <code class="token">Icon</code>
+          </header>
+          <div class="icons">
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /><path d="M8 12h12" /></svg>back</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14" /><path d="M5 12h14" /></svg>add</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" /></svg>check</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v4l3 3" /><path d="M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg>clock</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>chevron</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg>expand</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M15.5 7.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z" /><path d="M5 19.5a7 7 0 0114 0" /></svg>person</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5" /><path d="M9 13h6" /><path d="M9 17h6" /></svg>timeline</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6" /><path d="M10 3v5.2L5.8 17.8A3.2 3.2 0 008.8 22h6.4a3.2 3.2 0 003-4.2L14 8.2V3" /></svg>clinical</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20H4z" /><path d="M10 20v-6h4v6" /></svg>home</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z" /></svg>activity</div>
+            <div class="icon-cell"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21c4-3.5 7-7 7-11a7 7 0 10-14 0c0 4 3 7.5 7 11z" /><path d="M12 21V11" /></svg>diet</div>
+          </div>
+        </article>
+
+        <article class="specimen">
+          <header>
+            <div><strong>Text controls</strong><p>Text input, select, and text area. The field molecule supplies the label.</p></div>
+            <code class="token">TextInput · Select · TextArea</code>
+          </header>
+          <div class="cols-2">
+            <input class="control" value="Worsening dyspnea, NYHA class III" readonly />
+            <select class="control"><option>NYHA class III</option></select>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <p class="eyebrow">05</p>
+        <h2 class="section">Molecules</h2>
+        <p class="section-intro">A molecule has one job. It does not navigate between the dashboard and the form.</p>
+
+        <div class="cols-2">
+          <article class="specimen">
+            <header><div><strong>Field</strong><p>Label, control, and either a hint or an error. The error replaces the hint.</p></div><code class="token">Field</code></header>
+            <div class="field field-demo">
+              <span class="field-label">Clinical note</span>
+              <textarea class="control control-area" readonly>Visible to the care team after publish.</textarea>
+              <span class="field-hint">Visible to the care team after publish.</span>
+            </div>
+            <div class="field field-invalid field-demo" style="margin-top:12px">
+              <span class="field-label">Title</span>
+              <input class="control" value="" placeholder="Required" readonly />
+              <span class="field-error">Add a title before publish.</span>
+            </div>
+          </article>
+          <article class="specimen">
+            <header><div><strong>Choice</strong><p>A check the clinician can toggle. Checked uses the brand tint.</p></div><code class="token">Choice</code></header>
+            <div class="stack-sm">
+              <label class="choice choice-on"><input type="checkbox" checked /> Repeat NT-proBNP</label>
+              <label class="choice choice-on"><input type="checkbox" checked /> Transthoracic echo</label>
+              <label class="choice"><input type="checkbox" /> CBC</label>
+            </div>
+          </article>
+        </div>
+
+        <article class="specimen">
+          <header><div><strong>Lab metric</strong><p>Value, unit, and delta. Intent is clinical meaning. The sparkline is decorative.</p></div><code class="token">LabMetric</code></header>
+          <div class="row-gap" style="align-items:stretch">
+            <article class="lab lab-good">
+              <span class="card-expand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span>
+              <p class="lab-value">2.1<small>mmol/L</small><span class="lab-delta">−12%</span></p>
+              <span class="lab-label">LDL-C</span>
+              <svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><path class="spark-area" d="M 0 8 L 30 14 L 60 18 L 90 24 L 120 28 L 120 36 L 0 36 Z" /><path class="spark-line" d="M 0 8 L 30 14 L 60 18 L 90 24 L 120 28" /></svg>
+            </article>
+            <article class="lab lab-attention">
+              <span class="card-expand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span>
+              <p class="lab-value">58<small>mL/min</small><span class="lab-delta">−6</span></p>
+              <span class="lab-label">eGFR</span>
+              <svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><path class="spark-area" d="M 0 26 L 30 22 L 60 18 L 90 12 L 120 6 L 120 36 L 0 36 Z" /><path class="spark-line" d="M 0 26 L 30 22 L 60 18 L 90 12 L 120 6" /></svg>
+            </article>
+            <article class="lab lab-neutral">
+              <span class="card-expand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span>
+              <p class="lab-value">4.1<small>mmol/L</small></p>
+              <span class="lab-label">Potassium</span>
+              <svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><path class="spark-area" d="M 0 16 L 30 18 L 60 15 L 90 17 L 120 16 L 120 36 L 0 36 Z" /><path class="spark-line" d="M 0 16 L 30 18 L 60 15 L 90 17 L 120 16" /></svg>
+            </article>
+          </div>
+        </article>
+
+        <article class="specimen">
+          <header><div><strong>Timeline item</strong><p>Current is the open draft. Done is a published study. The dot follows the state.</p></div><code class="token">TimelineItem</code></header>
+          <ol class="timeline">
+            <li class="tl">
+              <div class="tl-rail"><span class="tl-dot" style="background:#2563eb"></span><span class="tl-line"></span></div>
+              <div class="tl-body">
+                <div class="tl-head"><h3>Worsening dyspnea, NYHA class III</h3><span class="status status-progress">In progress<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v4l3 3" /><path d="M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg></span></div>
+                <p class="meta">Draft</p>
+              </div>
+            </li>
+            <li class="tl">
+              <div class="tl-rail"><span class="tl-dot"></span><span class="tl-line"></span></div>
+              <div class="tl-body">
+                <div class="tl-head"><h3>Cardiac catheterization — patent grafts</h3><span class="status status-published">Published<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg></span></div>
+                <p class="meta">Friday, June 4, 2021</p>
+              </div>
+            </li>
+          </ol>
+        </article>
+      </section>
+
+      <section>
+        <p class="eyebrow">06</p>
+        <h2 class="section">Chart</h2>
+        <p class="section-intro">The template measures its own width. Wide screens show three columns. Narrow screens show one section at a time.</p>
+        <div class="layout-diagram">
+          <div><strong>Patient</strong><span>320px</span><span>Identity, history, risks, medications</span></div>
+          <div><strong>Work</strong><span>Centered, up to 600px</span><span>Timeline on the dashboard. The form during an assessment.</span></div>
+          <div><strong>Clinical</strong><span>384px</span><span>Exam, labs, ECG, echo, cath</span></div>
+        </div>
+        <table class="rules" style="margin-top:16px">
+          <thead>
+            <tr><th>Width</th><th>What changes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1041px and up</td><td>Three columns. Gap and page padding are 24px. The bottom bar is hidden.</td></tr>
+            <tr><td>1040px and under</td><td>One section. The timeline is the default. A fixed bar switches Patient, Timeline, and Clinical.</td></tr>
+            <tr><td>720px and under</td><td>Form actions stack and take the full width.</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Result cards carry an expand mark in the top right. It is decorative. The patient column does not. Section titles for exam, labs, ECG, echo, and cath sit above their cards.</p>
+
+        <h3 class="group">Accessibility</h3>
+        <table class="rules">
+          <thead>
+            <tr><th>Rule</th><th>How it is met</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Name</td><td>Icon buttons require a label. Status writes “In progress” or “Published”. Choices and fields have visible labels.</td></tr>
+            <tr><td>Focus</td><td>2px brand outline, 2px offset, on buttons, tabs, fields, choices, and the section bar.</td></tr>
+            <tr><td>Landmarks</td><td>Patient and clinical results are labeled regions. The section bar is a navigation landmark.</td></tr>
+            <tr><td>Not color alone</td><td>Lab intent includes the signed delta. Status includes the word and a decorative icon.</td></tr>
+            <tr><td>Check</td><td>Every story runs axe. A failure blocks the story. The region rule is the only one turned off, because Storybook’s canvas is not a page landmark.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+</html>

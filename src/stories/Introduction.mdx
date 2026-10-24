@@ -1,0 +1,325 @@
+import { Canvas, ColorItem, ColorPalette, Meta, Source } from '@storybook/addon-docs/blocks'
+import * as ButtonStories from './Button.stories'
+import * as ChartStories from './Workflows.stories'
+import * as ChipStories from './Chip.stories'
+import * as FieldStories from './Field.stories'
+import * as LabStories from './LabMetric.stories'
+import * as StatusStories from './Status.stories'
+
+<Meta title="Introduction" />
+
+# Clinical interface
+
+A patient-chart system for a fictional record. Designers use the tokens and the rules below. Developers copy the snippets.
+
+The catalog is the index of every component. Each component Docs page uses the same shape: what it is for, the import, do and don't, accessibility, then the props and the source.
+
+The chart is Jordan Hale, age 65. Do not replace that with a real patient, a real clinician, or an employer product name.
+
+## How it is built
+
+<table>
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>What it is</th>
+      <th>Examples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Foundations</td>
+      <td>Color, type, space, radius</td>
+      <td><code>--color-text-primary</code>, <code>--space-12</code></td>
+    </tr>
+    <tr>
+      <td>Atoms</td>
+      <td>One control, no layout opinions</td>
+      <td>Icon, Icon button, Count, Tab, Button, Chip, Status, text controls</td>
+    </tr>
+    <tr>
+      <td>Molecules</td>
+      <td>Atoms with one job</td>
+      <td>Field, Choice, Lab metric, Timeline item</td>
+    </tr>
+    <tr>
+      <td>Organisms</td>
+      <td>A section of the chart</td>
+      <td>Patient record, Diagnosis timeline, Assessment form, Clinical results</td>
+    </tr>
+    <tr>
+      <td>Templates</td>
+      <td>The three slots, and the small-screen section switch</td>
+      <td>Chart</td>
+    </tr>
+    <tr>
+      <td>Pages</td>
+      <td>A template filled with one record and one view</td>
+      <td>Dashboard, Assessment</td>
+    </tr>
+  </tbody>
+</table>
+
+The template places the patient, the work region, and the results. It does not decide what the work region shows. A page fills those slots for one record. Dashboard puts the timeline in the work slot. Assessment puts the form there. The page passes `onStart`, `onBack`, and `onPublish`.
+
+## For designers
+
+### Type
+
+Use the role, not a custom size.
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Spec</th>
+      <th>Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Title</td>
+      <td>22 / 26, weight 700, tracking -0.025em</td>
+      <td>Patient name, form title</td>
+    </tr>
+    <tr>
+      <td>Heading</td>
+      <td>15 / 20, weight 600</td>
+      <td>One assessment title</td>
+    </tr>
+    <tr>
+      <td>Metric</td>
+      <td>22 / 24, weight 600, tabular numbers</td>
+      <td>Lab values, ejection fraction</td>
+    </tr>
+    <tr>
+      <td>Body</td>
+      <td>14 / 20, weight 400</td>
+      <td>Notes, exam lines</td>
+    </tr>
+    <tr>
+      <td>Label</td>
+      <td>11 / 14, weight 600, uppercase, tracking 0.06em</td>
+      <td>Section names: Demographics, Labs, ECG</td>
+    </tr>
+    <tr>
+      <td>Caption</td>
+      <td>12 / 16, weight 400, secondary color</td>
+      <td>Dates, hints, referring clinician</td>
+    </tr>
+  </tbody>
+</table>
+
+Section labels stay small so the name and the numbers carry the page. Do not set a section title in the same size as body text.
+
+### Color
+
+Meaning is fixed. Do not reassign a tone because a number went up.
+
+<ColorPalette>
+  <ColorItem title="Canvas / surface" subtitle="Page and cards" colors={{ Canvas: '#f8fafc', Surface: '#ffffff' }} />
+  <ColorItem title="Text" subtitle="Primary, secondary" colors={{ Primary: '#0f172a', Secondary: '#64748b' }} />
+  <ColorItem title="Brand" subtitle="The forward action and diagnosis chips" colors={{ Brand: '#2563eb', Subtle: '#eff6ff' }} />
+  <ColorItem title="Clinical meaning" subtitle="Good, attention, steady" colors={{ Good: '#15803d', Attention: '#b91c1c', Steady: '#64748b' }} />
+  <ColorItem title="Workflow" subtitle="In progress, published" colors={{ Progress: '#a16207', Published: '#15803d' }} />
+</ColorPalette>
+
+Lab color is clinical meaning, not the direction of the arrow. LDL-C falling is good. eGFR falling is attention. A steady potassium stays neutral.
+
+### Actions and status
+
+One primary button in a region. It is the next step, such as Start assessment or Publish. Secondary saves a draft. Ghost leaves the flow, such as Back.
+
+Chips name a fact: a diagnosis, a risk, a medication. Status names where an assessment is: in progress or published. Do not use a chip as a status, or a status as a diagnosis.
+
+<Canvas of={ButtonStories.Primary} meta={ButtonStories} sourceState="none" />
+<Canvas of={ChipStories.Brand} meta={ChipStories} sourceState="none" />
+<Canvas of={StatusStories.InProgress} meta={StatusStories} sourceState="none" />
+
+### Layout
+
+The chart measures its own width, not the browser window, so it reflows inside Storybook.
+
+- Wide: patient at 320px, the timeline centered up to 600px, clinical results at 384px.
+- At 1040px and under: one section at a time. The timeline is showing. A bar at the bottom opens the patient record or the clinical results.
+- At 720px and under: the form actions stack and go full width.
+
+<Canvas of={ChartStories.Dashboard} meta={ChartStories} sourceState="none" layout="fullscreen" />
+
+## For developers
+
+Tokens are CSS variables. Components are React. Import from the level you are composing, not from a barrel.
+
+```css
+color: var(--color-text-primary);
+background: var(--color-bg-surface);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-md);
+padding: var(--space-12);
+font: 600 15px/20px var(--font-sans);
+letter-spacing: -0.015em;
+```
+
+### Icon, count, and tab
+
+<Source
+  language="tsx"
+  code={`import { Icon } from '../atoms/Icon'
+import { IconButton } from '../atoms/IconButton'
+import { Tab } from '../atoms/Tab'
+
+<Icon name="back" />
+<IconButton icon="add" label="Add diagnosis" />
+<Tab pressed>Cardiac</Tab>
+<Tab variant="text" pressed count={4}>Cardiac meds</Tab>`}
+/>
+
+### Button
+
+<Source
+  language="tsx"
+  code={`import { Button } from '../atoms/Button'
+
+<Button variant="primary">Start assessment</Button>
+<Button variant="secondary">Save draft</Button>
+<Button variant="ghost">Back</Button>
+<Button icon="check">Publish</Button>`}
+/>
+
+### Chip and status
+
+<Source
+  language="tsx"
+  code={`import { Chip } from '../atoms/Chip'
+import { Status } from '../atoms/Status'
+
+<Chip tone="brand">CAD</Chip>
+<Chip>Former smoker</Chip>
+<Status tone="progress" />
+<Status tone="published" />`}
+/>
+
+Tones for a chip are `brand`, `neutral`, `success`, `warning`, and `danger`. Neutral is the default. Status only accepts `progress` or `published`, and it writes its own label.
+
+### Field
+
+A field is the label, the control, and either a hint or an error. The control is an atom: `TextInput`, `Select`, or `TextArea`.
+
+<Canvas of={FieldStories.TextSelectAndError} meta={FieldStories} sourceState="none" />
+
+<Source
+  language="tsx"
+  code={`import { TextInput } from '../atoms/TextInput'
+import { Field } from '../molecules/Field'
+
+<Field label="Title" error={titleError}>
+  <TextInput
+    value={title}
+    onChange={(event) => setTitle(event.target.value)}
+  />
+</Field>
+
+<Field label="Clinical note" hint="Visible to the care team after publish.">
+  <TextArea value={note} onChange={(event) => setNote(event.target.value)} />
+</Field>`}
+/>
+
+Pass `error` or `hint`, not both. The error replaces the hint.
+
+### Choice
+
+<Source
+  language="tsx"
+  code={`import { Choice } from '../molecules/Choice'
+
+<Choice
+  label="Repeat NT-proBNP"
+  checked={checked}
+  onChange={setChecked}
+/>`}
+/>
+
+### Lab metric
+
+`intent` is `good`, `attention`, or `neutral`. The sparkline is drawn from `series`. The delta string is what the clinician reads, including the sign.
+
+<Canvas of={LabStories.Improving} meta={LabStories} sourceState="none" />
+
+<Source
+  language="tsx"
+  code={`import { LabMetric } from '../molecules/LabMetric'
+
+<LabMetric
+  label="LDL-C"
+  value="2.1"
+  unit="mmol/L"
+  delta="-12%"
+  intent="good"
+  series={[2.8, 2.6, 2.4, 2.2, 2.1]}
+/>`}
+/>
+
+### Timeline item
+
+<Source
+  language="tsx"
+  code={`import { Button } from '../atoms/Button'
+import { Status } from '../atoms/Status'
+import { TimelineItem } from '../molecules/TimelineItem'
+
+<ol className="timeline">
+  <TimelineItem
+    state="current"
+    title="Worsening dyspnea, NYHA class III"
+    meta="Draft"
+    trailing={<Status tone="progress" />}
+  >
+    <div className="tl-card">
+      <p>Symptoms, tests, and medication changes are still in draft.</p>
+      <Button onClick={onStart}>Start assessment</Button>
+    </div>
+  </TimelineItem>
+</ol>`}
+/>
+
+`state` is `current` or `done`. The dot color follows that state.
+
+### Template
+
+The template is the only place that knows the grid.
+
+<Source
+  language="tsx"
+  code={`import { ChartTemplate } from '../templates/ChartTemplate'
+
+<ChartTemplate
+  patient={<PatientRecord />}
+  work={<DiagnosisTimeline publishedTitle={null} onStart={openAssessment} />}
+  clinical={<ClinicalResults />}
+/>`}
+/>
+
+### Page
+
+The page fills the template for one view.
+
+<Source
+  language="tsx"
+  code={`import { ChartTemplate } from '../templates/ChartTemplate'
+
+<ChartTemplate
+  patient={<PatientRecord />}
+  work={
+    view === 'dashboard' ? (
+      <DiagnosisTimeline publishedTitle={publishedTitle} onStart={openAssessment} />
+    ) : (
+      <AssessmentForm onBack={closeAssessment} onPublish={publish} />
+    )
+  }
+  clinical={<ClinicalResults />}
+/>`}
+/>
+
+`.chart` stays inside the template. The width queries that reflow the record, the form, and the labs are attached to it.
+
+Each component Docs page lists the props and shows the story source. The Accessibility tab runs axe on the open story.

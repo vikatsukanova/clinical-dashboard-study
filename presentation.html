@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Clinical interface — talk</title>
+    <link rel="stylesheet" href="src/styles/system.css" />
+    <style>
+      html, body { height: 100%; background: #0f172a; }
+      body { overflow: hidden; }
+
+      .deck {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .slide {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1280px;
+        height: 720px;
+        margin-left: -640px;
+        margin-top: -360px;
+        padding: 52px 64px 48px;
+        box-sizing: border-box;
+        background: #f8fafc;
+        color: #0f172a;
+        transform: scale(var(--fit, 1));
+        transform-origin: center center;
+        flex-direction: column;
+      }
+
+      .slide.on { display: flex; }
+
+      .kicker {
+        margin: 0 0 12px;
+        color: #2563eb;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .slide h1 {
+        margin: 0;
+        font-size: 64px;
+        font-weight: 700;
+        line-height: 68px;
+        letter-spacing: -0.035em;
+      }
+
+      .slide h2 {
+        margin: 0 0 8px;
+        color: #0f172a;
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 44px;
+        letter-spacing: -0.03em;
+      }
+
+      .sub {
+        max-width: 720px;
+        margin: 18px 0 0;
+        color: #334155;
+        font-size: 22px;
+        line-height: 30px;
+      }
+
+      .notes { display: none; }
+
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 16px;
+        color: #64748b;
+        font-size: 13px;
+      }
+
+      .grid-3, .grid-2 { display: grid; gap: 16px; margin-top: 28px; }
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+
+      .card {
+        padding: 18px 18px 16px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+      }
+
+      .card strong { display: block; margin-bottom: 6px; font-size: 18px; }
+      .card p { margin: 0; color: #334155; font-size: 15px; line-height: 21px; }
+      .card .num { color: #2563eb; font-size: 13px; font-weight: 700; }
+
+      table.talk {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        font-size: 16px;
+        line-height: 22px;
+      }
+
+      table.talk th {
+        padding: 8px 12px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      table.talk td {
+        padding: 9px 12px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: top;
+      }
+
+      .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 22px; }
+      .sw { overflow: hidden; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
+      .sw i { display: block; height: 56px; }
+      .sw p { margin: 0; padding: 8px 10px 10px; font-size: 13px; }
+      .sw code { color: #64748b; font-size: 11px; }
+
+      .rule {
+        margin-top: 18px;
+        padding: 14px 16px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        color: #334155;
+        font-size: 16px;
+        line-height: 22px;
+      }
+
+      .take { display: grid; grid-template-columns: 48px 1fr; gap: 12px; align-items: start; margin-top: 18px; }
+      .take b {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 18px;
+      }
+      .take strong { display: block; font-size: 20px; }
+      .take span { color: #334155; font-size: 16px; line-height: 22px; }
+
+      .phone {
+        width: 220px;
+        margin: 8px auto 0;
+        padding: 16px 14px 12px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        box-shadow: var(--shadow-raised);
+      }
+
+      .phone .pane {
+        height: 150px;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 12px;
+        color: #334155;
+        font-size: 13px;
+      }
+
+      .phone nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      .phone nav span { color: #64748b; }
+      .phone nav .on { color: #2563eb; }
+
+      .chrome {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 5;
+        display: flex;
+        gap: 8px;
+      }
+
+      .chrome button {
+        min-height: 32px;
+        padding: 6px 12px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #0f172a;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: var(--shadow-card);
+      }
+
+      body.fullscreen-notes .chrome { display: none; }
+
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: #2563eb;
+        z-index: 4;
+      }
+
+      body.speaker { overflow: auto; background: #0f172a; }
+      body.speaker .deck, body.speaker .chrome, body.speaker .progress { display: none; }
+
+      .speaker-app {
+        display: none;
+        grid-template-columns: 280px 1fr;
+        gap: 28px;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px;
+        color: #e2e8f0;
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      body.speaker .speaker-app { display: grid; }
+
+      .speaker-app h2 { margin: 0 0 8px; color: #fff; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; }
+      .speaker-meta { color: #94a3b8; font-size: 13px; }
+      .speaker-notes {
+        margin: 0;
+        color: #f8fafc;
+        font-size: 22px;
+        line-height: 32px;
+      }
+
+      .previews { display: flex; flex-direction: column; gap: 16px; }
+      .preview-frame {
+        width: 280px;
+        height: 158px;
+        overflow: hidden;
+        position: relative;
+        background: #f8fafc;
+        border-radius: 8px;
+      }
+
+      .preview-frame .slide {
+        display: flex;
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        transform: scale(0.21875);
+        transform-origin: top left;
+      }
+
+      .nav-row { display: flex; gap: 8px; margin-top: 16px; }
+      .nav-row button {
+        min-height: 36px;
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .nav-row button.secondary { background: #1e293b; }
+    </style>
+  </head>
+  <body>
+    <div class="progress" id="progress"></div>
+    <main class="deck" id="deck">
+      <section class="slide">
+        <p class="kicker">Design system</p>
+        <h1>Clinical interface</h1>
+        <p class="sub">A patient chart, built as tokens, components, and two workflows. The record is fictional.</p>
+        <div class="foot"><span>Jordan Hale, 65</span><span>01</span></div>
+        <div class="notes">
+          This is a design system for a patient chart. I built it so the visual rules and the components are the same thing. You can open it in Storybook and see the tokens, the parts, and two workflows: the dashboard, and the assessment form. The patient is fictional. Jordan Hale, 65, cardiology, here for shortness of breath on exertion. There is no employer name and no real record in this study. I'll walk the decisions, then I can open the chart.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">02 · The job</p>
+        <h2>Three jobs at once</h2>
+        <div class="grid-3">
+          <article class="card"><span class="num">320px</span><strong>Patient</strong><p>Who this person is. Reason, history, risks, medications.</p></article>
+          <article class="card"><span class="num">Up to 600px</span><strong>Work</strong><p>The open assessment, or the form once it starts.</p></article>
+          <article class="card"><span class="num">384px</span><strong>Results</strong><p>Exam, labs, ECG, echo, and cath, in that order.</p></article>
+        </div>
+        <p class="rule">The components exist to hold this chart. The catalog is the index, not the product.</p>
+        <div class="foot"><span>Wide layout</span><span>02</span></div>
+        <div class="notes">
+          During a visit you need three things in front of you. Who the patient is, the work of this visit, and the results you use to decide. Those became the three columns. Patient is a fixed 320. The timeline stays centered and stops at 600, so a note does not stretch into a full-width paragraph. Results are 384. I want that picture in the room before I talk about atoms. The system is shaped by the chart. The catalog is how you find the parts.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">03 · Structure</p>
+        <h2>One map for design and code</h2>
+        <table class="talk">
+          <thead><tr><th>Level</th><th>What it owns</th><th>In this system</th></tr></thead>
+          <tbody>
+            <tr><td>Foundations</td><td>Color, type, space, radius</td><td>CSS variables</td></tr>
+            <tr><td>Atoms</td><td>One control</td><td>Button, chip, status, tab, fields</td></tr>
+            <tr><td>Molecules</td><td>One job</td><td>Field, choice, lab metric, timeline item</td></tr>
+            <tr><td>Organisms</td><td>A section of the chart</td><td>Record, timeline, form, results</td></tr>
+            <tr><td>Template</td><td>The grid and the small-screen switch</td><td>Chart</td></tr>
+            <tr><td>Pages</td><td>One record, one view</td><td>Dashboard, assessment</td></tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>Atomic design</span><span>03</span></div>
+        <div class="notes">
+          Design and engineering share one map. Foundations are the tokens. An atom is one control and it does not invent layout. A molecule has one job, like a labeled field or a lab metric. An organism is a section of the chart. The template is the only place that knows the grid, and it also owns the small-screen switch between sections. The page fills that template for one view. Dashboard puts the timeline in the middle. Assessment puts the form there. Organisms do not navigate. The page passes start, back, and publish.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">04 · Actions</p>
+        <h2>One next step</h2>
+        <div class="grid-2">
+          <article class="card">
+            <strong>Buttons</strong>
+            <p style="margin-bottom:14px">Primary moves forward. Secondary saves a draft. Ghost leaves.</p>
+            <div class="row-gap" style="display:flex;flex-wrap:wrap;gap:10px">
+              <button class="btn btn-primary" type="button">Start assessment</button>
+              <button class="btn btn-secondary" type="button">Save draft</button>
+              <button class="btn btn-ghost" type="button">Back</button>
+            </div>
+          </article>
+          <article class="card">
+            <strong>Chip is a fact. Status is a state.</strong>
+            <p style="margin-bottom:14px">A diagnosis is not a draft. The first chip in a group is brand.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="chip chip-brand">CAD</span>
+              <span class="chip chip-neutral">HFpEF</span>
+              <span class="status status-progress">In progress<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v4l3 3" /><path d="M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg></span>
+              <span class="status status-published">Published<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg></span>
+            </div>
+          </article>
+        </div>
+        <div class="foot"><span>Atoms</span><span>04</span></div>
+        <div class="notes">
+          Each region has one primary button. It is the next step, Start assessment or Publish. Secondary saves a draft. Ghost is how you leave, Back. Then the distinction I hold people to: a chip names a fact, a status names where the work is. CAD is a diagnosis. In progress is a draft. They should not wear each other's clothes. Status writes its own label, In progress or Published, and the icon only repeats the words. The first chip in a group is the brand blue. The rest stay neutral, so the eye lands once.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">05 · Color</p>
+        <h2>Color follows the result</h2>
+        <div class="swatches">
+          <div class="sw"><i style="background:#2563eb"></i><p>Brand<br /><code>#2563eb</code></p></div>
+          <div class="sw"><i style="background:#15803d"></i><p>Good<br /><code>#15803d</code></p></div>
+          <div class="sw"><i style="background:#a16207"></i><p>In progress<br /><code>#a16207</code></p></div>
+          <div class="sw"><i style="background:#b91c1c"></i><p>Attention<br /><code>#b91c1c</code></p></div>
+        </div>
+        <div class="grid-3" style="margin-top:18px">
+          <article class="card"><strong>LDL-C down</strong><p>Good. A lower cholesterol is the result you want.</p></article>
+          <article class="card"><strong>eGFR down</strong><p>Attention. A lower filtration rate is a worse result.</p></article>
+          <article class="card"><strong>Potassium steady</strong><p>Neutral. No change worth coloring.</p></article>
+        </div>
+        <div class="foot"><span>Text pairs meet WCAG AA</span><span>05</span></div>
+        <div class="notes">
+          Color follows the clinical result. LDL-C coming down is good. eGFR coming down is attention, even though the arrow points the same way. A steady potassium stays neutral. I say that out loud because it is the rule people get wrong. The pairs also have to pass contrast. White on the brand blue passes. White on the published green passes. Amber on the yellow tile passes. Where a lighter green, yellow, or gray from the visual reference failed, I kept the meaning and moved one step darker. I did not turn the contrast rule off to keep a prettier hex.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">06 · Type</p>
+        <h2>The name and the numbers lead</h2>
+        <div class="card" style="margin-top:22px">
+          <p style="font-size:20px;font-weight:700;line-height:28px;letter-spacing:-0.025em">Jordan Hale</p>
+          <p style="margin-top:8px;color:#64748b;font-size:13px">Patient name · 20 / 28 · weight 700</p>
+        </div>
+        <div class="grid-2" style="margin-top:14px">
+          <article class="card">
+            <p style="font-size:14px;font-weight:500;color:#1e293b">Latest diagnoses</p>
+            <p style="margin-top:8px;color:#64748b;font-size:13px">Section · 14 / 20 · weight 500</p>
+          </article>
+          <article class="card">
+            <p style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums">2.1 <span style="color:#64748b;font-size:9px;font-weight:500">mmol/L</span></p>
+            <p style="margin-top:8px;color:#64748b;font-size:13px">Lab value · 14 / 18 · tabular, unit kept</p>
+          </article>
+        </div>
+        <p class="rule">Section titles stay smaller than the name and the values. Inter throughout.</p>
+        <div class="foot"><span>Density</span><span>06</span></div>
+        <div class="notes">
+          The early type was flat, and the page had too much empty space. I pulled the hierarchy into two things that should win: the patient's name, and the numbers. Section titles are 14, medium weight, sentence case. They label the block. They do not compete with the name. Lab values are bold and tabular, and the unit stays on the number. A clinician should not have to remember whether that 2.1 is a cholesterol. Captions and dates sit in the secondary slate, the one that still passes contrast.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">07 · Lab metric</p>
+        <h2>Same part, three meanings</h2>
+        <div style="display:flex;gap:16px;margin-top:36px">
+          <article class="lab lab-good">
+            <span class="card-expand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span>
+            <p class="lab-value">2.1<small>mmol/L</small><span class="lab-delta">−12%</span></p>
+            <span class="lab-label">LDL-C</span>
+            <svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><path class="spark-area" d="M 0 8 L 30 14 L 60 18 L 90 24 L 120 28 L 120 36 L 0 36 Z" /><path class="spark-line" d="M 0 8 L 30 14 L 60 18 L 90 24 L 120 28" /></svg>
+          </article>
+          <article class="lab lab-attention">
+            <span class="card-expand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span>
+            <p class="lab-value">58<small>mL/min</small><span class="lab-delta">−6</span></p>
+            <span class="lab-label">eGFR</span>
+            <svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><path class="spark-area" d="M 0 26 L 30 22 L 60 18 L 90 12 L 120 6 L 120 36 L 0 36 Z" /><path class="spark-line" d="M 0 26 L 30 22 L 60 18 L 90 12 L 120 6" /></svg>
+          </article>
+          <article class="lab lab-neutral">
+            <span class="card-expand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span>
+            <p class="lab-value">4.1<small>mmol/L</small></p>
+            <span class="lab-label">Potassium</span>
+            <svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><path class="spark-area" d="M 0 16 L 30 18 L 60 15 L 90 17 L 120 16 L 120 36 L 0 36 Z" /><path class="spark-line" d="M 0 16 L 30 18 L 60 15 L 90 17 L 120 16" /></svg>
+          </article>
+        </div>
+        <p class="rule">The signed delta is what gets read. The sparkline is decorative. The arrow in the corner does not navigate.</p>
+        <div class="foot"><span>Molecule</span><span>07</span></div>
+        <div class="notes">
+          This is the molecule I use when someone asks how a rule becomes a component. One lab metric. Three intents. The delta is a string the clinician reads, including the sign, and the color matches the intent. The sparkline is hidden from assistive technology. It supports the number. It does not replace it. The corner arrow is on every result card, and it is decorative. The patient column does not get one. If I only show one component in Storybook after this slide, it is this one.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">08 · Responsive</p>
+        <h2>One section when the width drops</h2>
+        <div class="grid-2">
+          <article class="card">
+            <strong>1041 and up</strong>
+            <p>Three columns. 24 pixel gap. The bottom bar is hidden. The chart measures itself, so Storybook and a product frame behave the same way.</p>
+          </article>
+          <div>
+            <div class="phone">
+              <div class="pane"><strong>Timeline</strong><p style="margin-top:8px">The open assessment is the default section.</p></div>
+              <nav><span>Patient</span><span class="on">Timeline</span><span>Clinical</span></nav>
+            </div>
+            <p style="margin:12px 0 0;color:#334155;font-size:15px;line-height:21px">At 1040 and under, a bar switches sections. At 720, the form actions stack.</p>
+          </div>
+        </div>
+        <div class="foot"><span>Container queries on the chart</span><span>08</span></div>
+        <div class="notes">
+          The wide chart is the three columns. When the chart itself gets to 1040 or below, I show one section. The timeline is the default, because that is the work. A fixed bar at the bottom opens the patient record or the results. I did this instead of stacking all three. A stacked chart on a small screen is a long scroll through information you did not ask for. Below 720, the form buttons go full width so Publish is easy to hit. The queries hang off the chart, not the browser window. That is why the layout still responds inside a Storybook story.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">09 · Accessibility</p>
+        <h2>A failing story stays failed</h2>
+        <div class="grid-2" style="margin-top:22px">
+          <article class="card"><strong>Name</strong><p>Icon buttons require a label. Status writes its own words. Fields and choices have visible labels.</p></article>
+          <article class="card"><strong>Focus</strong><p>A 2 pixel brand outline, 2 pixels out, on buttons, tabs, fields, choices, and the section bar.</p></article>
+          <article class="card"><strong>Landmarks</strong><p>Patient and results are labeled regions. The section bar is a navigation landmark.</p></article>
+          <article class="card"><strong>Check</strong><p>Axe runs on every story. A violation fails the story. The region rule is the only one off.</p></article>
+        </div>
+        <div class="foot"><span>Addon, set to error</span><span>09</span></div>
+        <div class="notes">
+          Accessibility is part of the system, not a pass I do at the end. Every story runs axe, and the addon is set to error, so a violation fails the story. I fixed the real failures: contrast, names, landmarks. I did not disable rules to get a green check. The one exception is the region rule, because Storybook's canvas is not a page landmark. Icon buttons cannot be built without a label. Status announces In progress or Published. The clock and the check are decorative. Focus is always the same blue outline. And color is never the only signal. The lab still has its signed delta. The status still has its word.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">10 · Two workflows</p>
+        <h2>Same template, two pages</h2>
+        <div class="grid-2" style="margin-top:28px">
+          <article class="card">
+            <span class="num">Dashboard</span>
+            <strong>Timeline in the work slot</strong>
+            <p>Diagnoses, the open draft, published studies. Start assessment is the primary action.</p>
+          </article>
+          <article class="card">
+            <span class="num">Assessment</span>
+            <strong>Form in the work slot</strong>
+            <p>Title, class, symptoms, tests, medication, note. Publish returns to the dashboard.</p>
+          </article>
+        </div>
+        <p class="rule">The patient column and the results stay put. Only the middle changes.</p>
+        <div class="foot"><span>Pages</span><span>10</span></div>
+        <div class="notes">
+          This is the proof that the template is doing its job. Dashboard and assessment are the same three slots. The patient record stays. The results stay. The middle changes. On the dashboard the middle is the diagnosis timeline, and Start assessment is the primary. On the form, you set a title, a class, symptoms, tests, a medication change, and a note. Publish writes a title back onto the timeline and returns you to the dashboard. Back leaves without publishing. If we open Storybook after this, those are the two pages I would click through.
+        </div>
+      </section>
+
+      <section class="slide">
+        <p class="kicker">11 · Close</p>
+        <h2>What I want you to keep</h2>
+        <div class="take"><b>1</b><div><strong>Color follows the result</strong><span>A falling number is good only when the result is good.</span></div></div>
+        <div class="take"><b>2</b><div><strong>The template owns the layout</strong><span>The page owns the workflow. Organisms do not navigate.</span></div></div>
+        <div class="take"><b>3</b><div><strong>A story that fails access fails the build</strong><span>Contrast, names, and focus are checked on every story.</span></div></div>
+        <div class="foot"><span>Storybook · clinical interface</span><span>11</span></div>
+        <div class="notes">
+          Three things, if nothing else sticks. Color follows the clinical result. A falling number is good only when that result is good. The template owns the layout, and the page owns the workflow. Sections of the chart do not send you to another view. And a story that fails access fails the build. Contrast, names, and focus are checked every time, not in a later audit. I can open the catalog, the dashboard, and the assessment from here. Happy to take questions on any of the three.
+        </div>
+      </section>
+    </main>
+
+    <div class="chrome" id="chrome">
+      <button type="button" id="open-speaker">Speaker notes</button>
+      <button type="button" id="prev">Back</button>
+      <button type="button" id="next">Next</button>
+    </div>
+
+    <div class="speaker-app" id="speaker-app">
+      <div class="previews">
+        <div>
+          <h2>Now</h2>
+          <div class="preview-frame" id="preview-now"></div>
+        </div>
+        <div>
+          <h2>Next</h2>
+          <div class="preview-frame" id="preview-next"></div>
+        </div>
+        <p class="speaker-meta" id="speaker-count"></p>
+        <div class="nav-row">
+          <button type="button" id="sp-prev" class="secondary">Back</button>
+          <button type="button" id="sp-next">Next</button>
+        </div>
+      </div>
+      <div>
+        <h2>Say this</h2>
+        <p class="speaker-meta" id="speaker-title"></p>
+        <p class="speaker-notes" id="speaker-notes"></p>
+      </div>
+    </div>
+
+    <script>
+      const KEY = 'clinical-ds-slide'
+      const slides = [...document.querySelectorAll('.slide')]
+      const speaker = new URLSearchParams(location.search).get('speaker') === '1'
+      const progress = document.getElementById('progress')
+      let index = clamp(Number(localStorage.getItem(KEY) || 0))
+
+      function clamp(n) {
+        if (!Number.isFinite(n)) return 0
+        return Math.max(0, Math.min(slides.length - 1, n))
+      }
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720)
+        document.documentElement.style.setProperty('--fit', String(scale))
+      }
+
+      function preview(slide, frame) {
+        frame.replaceChildren()
+        if (!slide) return
+        const clone = slide.cloneNode(true)
+        clone.classList.remove('on')
+        clone.querySelector('.notes')?.remove()
+        frame.appendChild(clone)
+      }
+
+      function publish(n) {
+        localStorage.setItem(KEY, String(n))
+      }
+
+      function render(n = index) {
+        index = clamp(n)
+        if (speaker) {
+          document.body.classList.add('speaker')
+          const current = slides[index]
+          const next = slides[index + 1]
+          document.getElementById('speaker-notes').textContent = current.querySelector('.notes').textContent.trim()
+          document.getElementById('speaker-title').textContent = current.querySelector('h1, h2').textContent
+          document.getElementById('speaker-count').textContent = (index + 1) + ' of ' + slides.length
+          preview(current, document.getElementById('preview-now'))
+          preview(next, document.getElementById('preview-next'))
+          return
+        }
+        slides.forEach((slide, i) => slide.classList.toggle('on', i === index))
+        progress.style.width = ((index + 1) / slides.length * 100) + '%'
+      }
+
+      function go(delta) {
+        const next = clamp(index + delta)
+        if (next === index) return
+        publish(next)
+        render(next)
+      }
+
+      document.getElementById('next').addEventListener('click', () => go(1))
+      document.getElementById('prev').addEventListener('click', () => go(-1))
+      document.getElementById('sp-next').addEventListener('click', () => go(1))
+      document.getElementById('sp-prev').addEventListener('click', () => go(-1))
+      document.getElementById('open-speaker').addEventListener('click', () => {
+        window.open('presentation.html?speaker=1', 'clinical-ds-speaker', 'width=1100,height=760')
+      })
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === 'PageDown' || event.key === ' ') {
+          event.preventDefault()
+          go(1)
+        } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp' || event.key === 'PageUp') {
+          event.preventDefault()
+          go(-1)
+        } else if (event.key === 'Home') {
+          publish(0)
+          render(0)
+        } else if (event.key === 'End') {
+          publish(slides.length - 1)
+          render(slides.length - 1)
+        } else if (event.key === 's' || event.key === 'S') {
+          if (!speaker) document.getElementById('open-speaker').click()
+        } else if (event.key === 'f' || event.key === 'F') {
+          if (!document.fullscreenElement) document.documentElement.requestFullscreen()
+          else document.exitFullscreen()
+        }
+      })
+
+      window.addEventListener('storage', (event) => {
+        if (event.key === KEY) render(Number(event.newValue))
+      })
+
+      window.addEventListener('resize', fit)
+      fit()
+      publish(index)
+      render(index)
+    </script>
+  </body>
+</html>
