@@ -37,7 +37,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Icon',
         description: 'A mark beside a label. Hidden from assistive technology.',
-        href: '/?path=/docs/atoms-icon--docs',
+        href: '?path=/docs/atoms-icon--docs',
         preview: (
           <div className="catalog-row">
             <Icon name="back" />
@@ -51,13 +51,13 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Icon button',
         description: 'A round control. The label is the accessible name.',
-        href: '/?path=/docs/atoms-icon-button--docs',
+        href: '?path=/docs/atoms-icon-button--docs',
         preview: <IconButton icon="add" label="Add diagnosis" />,
       },
       {
         name: 'Count',
         description: 'How many items a tab contains.',
-        href: '/?path=/docs/atoms-count--docs',
+        href: '?path=/docs/atoms-count--docs',
         preview: (
           <div className="catalog-row">
             <Count value={4} />
@@ -68,7 +68,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Tab',
         description: 'Pill tabs switch the exam. Text tabs switch medications.',
-        href: '/?path=/docs/atoms-tab--docs',
+        href: '?path=/docs/atoms-tab--docs',
         preview: (
           <div className="catalog-row">
             <Tab pressed>Cardiac</Tab>
@@ -80,7 +80,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Button',
         description: 'One action. Primary moves forward, secondary saves, ghost leaves.',
-        href: '/?path=/docs/atoms-button--docs',
+        href: '?path=/docs/atoms-button--docs',
         preview: (
           <div className="catalog-row">
             <Button icon="check">Publish</Button>
@@ -92,7 +92,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Chip',
         description: 'A diagnosis, a risk, or a medication. Not a workflow state.',
-        href: '/?path=/docs/atoms-chip--docs',
+        href: '?path=/docs/atoms-chip--docs',
         preview: (
           <div className="catalog-row">
             <Chip tone="brand">CAD</Chip>
@@ -104,7 +104,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Status',
         description: 'In progress or published. The component writes the label.',
-        href: '/?path=/docs/atoms-status--docs',
+        href: '?path=/docs/atoms-status--docs',
         preview: (
           <div className="catalog-row">
             <Status tone="progress" />
@@ -115,7 +115,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Text controls',
         description: 'Text input, select, and textarea. Always pair them with a label.',
-        href: '/?path=/docs/atoms-text-controls--docs',
+        href: '?path=/docs/atoms-text-controls--docs',
         preview: (
           <div className="catalog-controls">
             <TextInput defaultValue="Worsening dyspnea" aria-label="Title" />
@@ -133,7 +133,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Field',
         description: 'A label, one control, and either a hint or an error.',
-        href: '/?path=/docs/molecules-field--docs',
+        href: '?path=/docs/molecules-field--docs',
         preview: (
           <div className="catalog-controls">
             <Field label="Title" error="Add a title before publishing.">
@@ -145,7 +145,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Choice',
         description: 'A test the clinician can order.',
-        href: '/?path=/docs/molecules-choice--docs',
+        href: '?path=/docs/molecules-choice--docs',
         preview: (
           <div className="catalog-row">
             <Choice label="Repeat NT-proBNP" checked onChange={noop} />
@@ -156,13 +156,13 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Lab metric',
         description: 'Value, unit, delta, and sparkline. Color is clinical meaning.',
-        href: '/?path=/docs/molecules-lab-metric--docs',
+        href: '?path=/docs/molecules-lab-metric--docs',
         preview: <LabMetric {...labs[0]} />,
       },
       {
         name: 'Timeline item',
         description: 'One assessment on the history rail.',
-        href: '/?path=/docs/molecules-timeline-item--docs',
+        href: '?path=/docs/molecules-timeline-item--docs',
         scale: 'panel',
         preview: (
           <ol className="timeline">
@@ -183,28 +183,28 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Patient record',
         description: 'Identity, demographics, risks, medications, and allergies.',
-        href: '/?path=/docs/organisms-patient-record--docs',
+        href: '?path=/docs/organisms-patient-record--docs',
         scale: 'record',
         preview: <PatientRecord />,
       },
       {
         name: 'Diagnosis timeline',
         description: 'Current draft and the published assessments.',
-        href: '/?path=/docs/organisms-diagnosis-timeline--docs',
+        href: '?path=/docs/organisms-diagnosis-timeline--docs',
         scale: 'panel',
         preview: <DiagnosisTimeline publishedTitle={null} onStart={noop} />,
       },
       {
         name: 'Assessment form',
         description: 'Symptoms, tests, medication change, and the note.',
-        href: '/?path=/docs/organisms-assessment-form--docs',
+        href: '?path=/docs/organisms-assessment-form--docs',
         scale: 'panel',
         preview: <AssessmentForm onBack={noop} onPublish={noop} />,
       },
       {
         name: 'Clinical results',
         description: 'Exam, labs, ECG, echo, and cath.',
-        href: '/?path=/docs/organisms-clinical-results--docs',
+        href: '?path=/docs/organisms-clinical-results--docs',
         scale: 'panel',
         preview: <ClinicalResults />,
       },
@@ -216,7 +216,7 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Chart',
         description: 'Three columns on a wide screen. One section at a time below that.',
-        href: '/?path=/docs/templates-chart--docs',
+        href: '?path=/docs/templates-chart--docs',
         scale: 'chart',
         preview: (
           <ChartTemplate
@@ -234,14 +234,14 @@ const groups: { title: string; entries: Entry[] }[] = [
       {
         name: 'Dashboard',
         description: 'The chart with the timeline in the work slot.',
-        href: '/?path=/story/pages-patient-chart--dashboard',
+        href: '?path=/story/pages-patient-chart--dashboard',
         scale: 'chart',
         preview: <PatientChart initial="dashboard" />,
       },
       {
         name: 'Assessment',
         description: 'The same chart with the form in the work slot.',
-        href: '/?path=/story/pages-patient-chart--assessment',
+        href: '?path=/story/pages-patient-chart--assessment',
         scale: 'chart',
         preview: <PatientChart initial="assessment" />,
       },

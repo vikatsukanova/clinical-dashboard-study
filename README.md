@@ -2,6 +2,8 @@
 
 Storybook for the patient-chart design system, organized with atomic design: foundations, atoms, molecules, organisms, templates, and pages. Patient details are fictional.
 
+Published at https://vikatsukanova.github.io/clinical-dashboard-study/
+
 ```bash
 npm run storybook
 ```
